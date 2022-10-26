@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.PetMapper">  	
+  	<insert id="signupP" parameterType="Pet">
+  		insert into PET values('pet'||PET_SEQ.nextval, #{email}, #{name}, #{kind}, #{breed}, 
+  		#{bdate}, #{sex}, #{cut}, #{big}, #{memo}, SYSDATE)
+  	</insert>
+  	<select id='getPetinfo' resultType='Pet'>
+  		select * from PET where EMAIL=#{email}
+  	</select>
+  	<select id='getOnePet' resultType='Pet'>
+  		select * from PET where PETSEQ=#{petseq}
+  	</select>
+  	<update id='updateP' parameterType="Pet">
+  		update PET set NAME=#{name}, BREED=#{breed}, CUT=#{cut}, BIG=#{big}, MEMO=#{memo} where PETSEQ=#{petseq}
+  	</update>
+  	<delete id='deleteP' parameterType='String'>
+  		delete PET where PETSEQ=#{petseq}
+  	</delete>
+ </mapper> 

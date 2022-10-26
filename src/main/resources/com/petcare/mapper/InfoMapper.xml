@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.InfoMapper"> 
+  	<select id="list" resultType="Info">
+	    select * from NOTICE order by length(n_seq) desc,n_seq desc
+	</select>
+	<insert id="insert" parameterType="Info">
+		insert into NOTICE values('INFO'||notice_seq.nextval, #{title}, #{admin}, #{content}, default, default)
+	</insert>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from NOTICE where N_SEQ=#{n_seq}
+	</delete>
+	<update id="update" parameterType="Info">
+		update NOTICE set TITLE=#{title}, ADMIN=#{admin}, CONTENT=#{content}, WDATE=SYSDATE where N_SEQ=#{n_seq}
+	</update>
+	<select id="content" parameterType="String" resultType="Info">
+		select * from NOTICE where N_SEQ=#{n_seq}
+	</select>
+	<select id="selectCount" resultType="long">
+		select max(ROWNUM) from NOTICE
+	</select>
+	<select id="selectPerPage" resultType="Info" parameterType="InfoVo">
+		<![CDATA[
+		select * from (select ROWNUM rnum, aa. * from (select * from NOTICE order by length(n_seq) desc,n_seq desc) aa)
+		where rnum>#{startRow} and rnum<=#{endRow} 
+		]]>
+	</select>
+ </mapper> 

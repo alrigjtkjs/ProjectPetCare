@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.AddressMapper"> 
+   <select id="selectByAddr" resultType="Address" parameterType="String">
+      select * from ADDRESS where ADDRESS_NAME like '%'||#{addr}||'%'
+   </select>
+   <select id="nearAddr" resultType="String" parameterType="Double">
+   		<![CDATA[select ADDRESS_NAME from ADDRESS WHERE (calc_distance(#{y},#{x}, Y, X))<=2]]>
+   </select>
+   <insert id="settingDong" parameterType="MyDong">
+   		insert into MyDong values(MYDONG_SEQ.nextval,#{dongname},#{useremail})
+   </insert>
+   
+   <select id="selectMydong" resultType="String" parameterType="String">
+   		select DONGNAME from MYDONG where USEREMAIL=#{useremail} 
+   </select>
+   <select id="selectNeardong" resultType="String" parameterType="String">
+   		select NEARDNAME from NEARDONG where USEREMAIL=#{useremail} 
+   </select>
+   
+   <insert id="settingNearDong" parameterType="NearDong">
+   		insert into NEARDONG values(#{neardname},#{useremail},MYDONG_SEQ.currval)
+   </insert>
+   <delete id="cancelDong" parameterType="String">
+		delete from MYDONG where useremail=#{useremail}
+   </delete>
+ </mapper> 

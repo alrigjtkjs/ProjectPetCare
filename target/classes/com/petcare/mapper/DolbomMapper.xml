@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.DolbomMapper"> 
+  	<select id="list" resultType="Dolbom">
+	    select * from DOLBOM order by DOL_SEQ desc
+	</select>
+	<select id="content" resultType="Dolbom" parameterType="String">
+	    select * from DOLBOM where DOL_SEQ=#{dol_seq}
+	</select>
+	<select id="selectPerPage" resultType="DOLBOM" parameterType="PageVo">
+	     <![CDATA[
+	     select * from (select ROWNUM rnum, aa.* from (select * from DOLBOM order by DOL_SEQ desc) aa)
+	     where rnum>#{startRow} and rnum<=#{endRow}
+	     ]]>
+	</select>
+	<select id="selectCount" resultType="long">
+	     select nvl(max(ROWNUM),0) from DOLBOM
+	</select>
+	<insert id="insertDolbom" parameterType="Dolbom">
+		insert into DOLBOM values('DOL'||DOLBOM_SEQ.nextval,#{category},#{header},#{content},#{kind},#{region},#{workdate,jdbcType=DATE},#{workday},#{workstime},#{worketime},#{tag},'대기중',SYSDATE,#{nickname},#{email})
+	</insert>
+	<select id="waitList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where RECEIVEREMAIL=#{email} and STATE='대기중' order by SEQ desc
+	</select>
+	
+	<!-- <select id="receiveList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where RECEIVEREMAIL=#{email} and STATE=#{state} order by SEQ desc
+	</select> -->
+	<!-- <select id="sendList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where SENDEREMAIL=#{email} and STATE=#{state} order by SEQ desc
+	</select> -->
+	<select id="receiveList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where RECEIVEREMAIL=#{email} order by SEQ desc
+	</select>
+	<select id="sendList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where SENDEREMAIL=#{email} order by SEQ desc
+	</select>
+	<select id="selectDList" resultType="Dolbomlist" parameterType="String">
+	    select * from DOLBOMLIST where SENDEREMAIL=#{email} or RECEIVEREMAIL=#{email} order by rdate desc
+	</select>		
+	<update id="setStateContinue" parameterType="long">
+		update DOLBOMLIST set STATE='진행중' where SEQ=#{seq}
+	</update>
+	<update id="setStateFinish" parameterType="long">
+		update DOLBOMLIST set STATE='완료' where SEQ=#{seq}
+	</update>
+	<delete id="deleteList" parameterType="long">
+		delete from DOLBOMLIST where SEQ=#{seq}
+	</delete>
+	<insert id="insertDolbomList" parameterType="Dolbomlist">
+		insert into DOLBOMLIST values(DOLBOMLIST_SEQ.nextval,#{category},#{state},#{sendernick},#{senderemail},#{receivernick},#{receiveremail},SYSDATE,#{workdate},#{kind},#{dseq})
+	</insert>
+	<select id="selectTime" resultType="Dolbom" parameterType="String">
+	    select header,kind,dol_seq from DOLBOM where email=#{email}
+	</select>
+	
+	<!-- 검색 -->
+	<select id="searchOption" resultType="Dolbom" parameterType="SearchList">
+	    select * from DOLBOM where category like '%'||#{category}||'%' and kind like '%'||#{kind}||'%' and tag like '%'||#{tag}||'%' 
+	    and region in 
+		<foreach collection="region" item="region" index="idx" separator="," open="(" close=")">
+    	#{region}
+    	</foreach> order by wdate desc
+	</select>
+	<select id="searchOptionDate" resultType="Dolbom" parameterType="SearchList">
+	    select * from DOLBOM where category like '%'||#{category}||'%' and kind like '%'||#{kind}||'%' and tag like '%'||#{tag}||'%' 
+	    and ((category='제공' and workday like '%'||#{workday}||'%') or (category='요청' and workdate=#{workdate})) 
+	    and region in 
+		<foreach collection="region" item="region" index="idx" separator="," open="(" close=")">
+    	#{region}
+    	</foreach> order by wdate desc
+	</select>
+	<select id="searchDong" resultType="Dolbom" parameterType="java.util.List">
+		select * from DOLBOM where region in 
+		<foreach collection="list" item="region" index="idx" separator="," open="(" close=")">
+    	#{region}
+    	</foreach> order by DOL_SEQ desc
+	</select>
+	<select id="searchAll" resultType="Dolbom">
+		select * from DOLBOM order by DOL_SEQ desc
+	</select>
+	<select id="searchAllOption" resultType="Dolbom" parameterType="SearchList">
+	    select * from DOLBOM where category like '%'||#{category}||'%' and kind like '%'||#{kind}||'%' and tag like '%'||#{tag}||'%' 
+	    order by wdate desc
+	</select>
+	<select id="searchAllOptionDate" resultType="Dolbom" parameterType="SearchList">
+	    select * from DOLBOM where category like '%'||#{category}||'%' and kind like '%'||#{kind}||'%' and tag like '%'||#{tag}||'%' 
+	    and ((category='제공' and workday like '%'||#{workday}||'%') or (category='요청' and workdate=#{workdate})) 
+	    order by wdate desc
+	</select>
+	<!-- 채팅관련 -->
+	<select id="chatEmail" resultType="String" parameterType="String">
+	    select email from DOLBOM where dol_seq=#{dol_seq}
+	</select>
+	
+ </mapper> 

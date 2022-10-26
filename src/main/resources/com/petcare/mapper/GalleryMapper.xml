@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.GalleryMapper"> 
+  	<select id="galleryList" resultType="Gallery">
+  		select * from Gallery order by WDATE desc
+	</select>
+	<select id="galleryMyList" resultType="Gallery" parameterType="String">
+	    select * from GALLERY where EMAIL=#{email} order by WDATE desc
+	</select>
+	<insert id="galleryWrite" parameterType="Gallery">
+		insert into GALLERY (g_seq, email, content) values ('G'||gallery_SEQ.nextval, #{email}, #{content})
+	</insert>
+	<delete id="galleryDelete" parameterType="String">
+		delete GALLERY where G_SEQ=#{g_seq} 
+	</delete>
+	<update id="galleryUpdate" parameterType="Gallery">
+		update GALLERY set CONTENT=#{content} where G_SEQ=#{g_seq} 
+	</update>
+	<update id="galleryUpdateView" parameterType="Gallery">
+		update GALLERY set views=#{views} where G_SEQ=#{g_seq}
+	</update>
+	<select id="gUpdateList" resultType="Gallery" parameterType="String">
+	    select * from GALLERY where G_SEQ=#{g_seq}
+	</select>
+ </mapper> 

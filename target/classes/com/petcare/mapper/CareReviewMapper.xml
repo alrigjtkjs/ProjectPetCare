@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.petcare.mapper.CareReviewMapper">
+	<select id="selectPerPage" resultType="CareReview">
+		select * from CAREREVIEW order by CR_SEQ desc
+	</select>
+
+	<select id="selectBySeq" resultType="CareReview"
+		parameterType="String"><!--paramaterType="String" mapper에서 String값으로 들어온 값 -->
+		<!-- resultType=CareReview 나가는 값 최종적으로 jsp로 selectBySeq -->
+		select * from CAREREVIEW where CR_SEQ=#{cr_seq}<!-- CR_SEQ로 잡아줬으니 데이터 타입string로 잡아줌 -->
+	</select>
+
+	<select id="selectCount" resultType="long">
+		select nvl(max(ROWNUM), 0) from CAREREVIEW
+	</select>
+
+	<insert id="insert" parameterType="CareReview">
+		insert into CAREREVIEW
+		values('CR'||CAREREVIEW_SEQ.nextval, #{content},#{writer},#{writerEmail},#{dolbomy},#{dolbomyEmail},#{star},SYSDATE)
+	</insert>
+	
+	<update id="edit" parameterType="CareReview" >
+	<!--update는 set으로 insert=values로 셋팅 공식같이! -->
+	 update CAREREVIEW set CONTENT=#{content}, STAR=#{star} where CR_SEQ=#{cr_seq}
+	</update>
+
+	<delete id="delete" parameterType="String">
+		delete from CAREREVIEW where CR_SEQ=#{cr_seq}
+	</delete> 
+		 <!--serviceImpl에서 데티터타입을 올으로 받음 -->
+</mapper> 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+  <typeAliases>
+  	<typeAlias alias="Address" type="com.petcare.domain.Address"/>
+  	<typeAlias alias="CareReview" type="com.petcare.domain.CareReview"/>
+  	<typeAlias alias="Chatting" type="com.petcare.domain.Chatting"/>
+  	<typeAlias alias="Comnt" type="com.petcare.domain.Comnt"/>
+  	<typeAlias alias="Dolbom" type="com.petcare.domain.Dolbom"/>
+  	<typeAlias alias="Dolbomlist" type="com.petcare.domain.Dolbomlist"/>
+  	<typeAlias alias="Files" type="com.petcare.domain.Files"/>
+  	<typeAlias alias="FilesVo" type="com.petcare.domain.FilesVo"/>
+  	<typeAlias alias="Freeboard" type="com.petcare.domain.Freeboard"/>
+  	<typeAlias alias="Gallery" type="com.petcare.domain.Gallery"/>
+  	<typeAlias alias="Info" type="com.petcare.domain.Info"/>
+  	<typeAlias alias="InfoVo" type="com.petcare.domain.InfoVo"/>
+  	<typeAlias alias="LikesList" type="com.petcare.domain.LikesList"/>
+  	<typeAlias alias="ListVo" type="com.petcare.domain.ListVo"/>
+  	<typeAlias alias="Member" type="com.petcare.domain.Member"/>
+  	<typeAlias alias="MyDong" type="com.petcare.domain.MyDong"/>
+  	<typeAlias alias="NearDong" type="com.petcare.domain.NearDong"/>
+  	<typeAlias alias="PageVo" type="com.petcare.domain.PageVo"/>
+  	<typeAlias alias="Pagination" type="com.petcare.domain.Pagination"/>
+  	<typeAlias alias="Path" type="com.petcare.domain.Path"/>
+  	<typeAlias alias="Pet" type="com.petcare.domain.Pet"/>
+  	<typeAlias alias="PrevAndNext" type="com.petcare.domain.PrevAndNext"/>
+  	<typeAlias alias="Room" type="com.petcare.domain.Room"/>
+  	<typeAlias alias="Tag" type="com.petcare.domain.Tag"/>
+  	<typeAlias alias="ShareMarket" type="com.petcare.domain.ShareMarket"/>
+  	<typeAlias alias="SearchList" type="com.petcare.domain.SearchList"/>
+  </typeAliases>
+</configuration>

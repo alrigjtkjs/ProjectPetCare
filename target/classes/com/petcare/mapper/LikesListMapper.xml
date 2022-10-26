@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.LikesListMapper"> 
+ 	<select id="selectHasLike" parameterType="String" resultType="boolean">
+ 		select count(*) from LikesList where b_seq=#{b_seq} and email=#{email}
+ 	</select>
+ 	<insert id="insertLike" parameterType="LikesList">
+ 		insert into LikesList values(#{b_seq}, #{email})
+ 	</insert>
+ 	<delete id="deleteLike" parameterType="LikesList">
+ 		delete LikesList where b_seq=#{b_seq} and email=#{email}
+ 	</delete>
+ </mapper> 

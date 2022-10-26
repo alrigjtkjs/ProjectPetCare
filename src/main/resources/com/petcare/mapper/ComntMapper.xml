@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.ComntMapper">
+ 	<select id="selectComntLists" parameterType="ListVo" resultType="Comnt">
+ 		<![CDATA[
+ 			select * from (select ROWNUM rnum, aa.* 
+ 			from(select * from comnt start with gnum=0 connect by prior cmt_seq=gnum 
+ 			order siblings by gord, cmt_seq)aa where b_seq=#{b_seq}) 
+ 			where rnum>#{startRowPerPage} and rnum<=#{endRowPerPage}
+ 		]]>
+ 	</select>
+  
+ 	<insert id="insertComnt" parameterType="Comnt">
+		insert into Comnt values(
+		comnt_seq.nextval, #{b_seq}, #{email}, #{content}, sysdate, #{gnum}, #{gord}, #{depth}
+		)
+ 	</insert>
+ 	
+ 	<select id="selectTotalRowCounts" parameterType="String" resultType="long">
+ 		select NVL(max(rownum), 0) from Comnt where b_seq=#{b_seq}
+ 	</select>
+ 	
+ 	<insert id="insertReply" parameterType="Comnt">
+ 		insert into comnt values(comnt_seq.nextval, #{b_seq}, #{email}, #{content}, sysdate, #{gnum},
+ 		(select nvl(max(gord), 0)+1 from comnt where gnum=#{gnum}),
+ 		 (select nvl(min(depth), 0)+1 from comnt where cmt_seq=#{gnum}))
+ 	</insert>
+ 	
+ 	<update id="updateComnt" parameterType="Comnt">
+		update comnt set content=#{content} where b_seq=#{b_seq} and cmt_seq=#{cmt_seq}
+ 	</update>
+ 	
+ 	<delete id="deleteComnt" parameterType="Comnt">
+ 		delete comnt where b_seq=#{b_seq} and cmt_seq=#{cmt_seq}
+ 	</delete>
+ 	
+ 	<update id="updateChildComnt" parameterType="Comnt">
+ 		update comnt set gnum=0 where gnum=#{cmt_seq} and b_seq=#{b_seq}	
+ 	</update>
+ 	
+ </mapper> 

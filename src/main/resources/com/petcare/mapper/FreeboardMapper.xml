@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.FreeboardMapper"> 
+  	<select id="list" resultType="Freeboard">
+	    select * from FREEBOARD order by WDATE desc
+	</select>
+	<select id="content" parameterType="String" resultType="Freeboard" >
+        select * from FREEBOARD where FB_SEQ=#{fb_seq}
+	</select>
+	<insert id="write" parameterType="Freeboard">
+	    insert into FREEBOARD values ('FB'||FREEBOARD_SEQ.nextval, #{title}, #{email}, #{content}, 0, 0, SYSDATE)
+	</insert>
+	<delete id="delete" parameterType="String">
+	    delete from FREEBOARD where FB_SEQ=#{fb_seq}
+	</delete>
+	<update id="update" parameterType="Freeboard">
+	    update FREEBOARD set TITLE=#{title}, CONTENT=#{content} where FB_SEQ=#{fb_seq}
+	</update>
+	<select id="updateList" resultType="Freeboard" parameterType="String">
+	    select * from FREEBOARD where FB_SEQ=#{FB_seq}
+	</select>
+ </mapper> 

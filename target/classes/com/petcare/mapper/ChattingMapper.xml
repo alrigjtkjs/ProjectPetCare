@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+ <mapper namespace="com.petcare.mapper.ChattingMapper"> 
+  	<select id="list" resultType="Chatting">
+	    select * from CHATTING where c_owner=#{c_owner} or c_guest=#{c_guest} order by c_rdate desc
+	</select>
+	<delete id="delete" parameterType="String">
+		delete from CHATTING where c_number=#{c_number}
+	</delete>
+	<insert id="insert" parameterType="Chatting">
+		insert into CHATTING values(#{c_number},#{c_subject},#{c_owner},#{c_guest},default,default)
+	</insert>
+	<update id="update" parameterType="Chatting">
+		update CHATTING set c_rdate=default where c_number=#{c_number}
+	</update>
+	<select id="listall" resultType="Chatting">
+	    select * from CHATTING order by c_rdate desc
+	</select>
+	<select id="listsearch" resultType="Chatting">
+		select * from CHATTING where (c_owner=#{c_owner} or c_guest=#{c_guest}) and c_subject like '%'||#{c_subject}||'%' order by c_rdate desc
+	</select>
+ </mapper> 

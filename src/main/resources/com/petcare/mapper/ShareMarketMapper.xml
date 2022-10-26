@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.petcare.mapper.ShareMarketMapper"> 
+	<select id="selectShareMarketLists" parameterType="ListVo" resultType="ShareMarket">
+		 <!-- <![CDATA[
+	     select * from (select ROWNUM rnum, aa.* from (select * from ShareMarket order by length(SM_SEQ)desc, SM_SEQ desc) aa)
+	     where rnum>#{startRowPerPage} and rnum<=#{endRowPerPage}
+	    ]]> -->
+	   <![CDATA[
+         select * from 
+         (select a.*, nvl(b.likes,0) likes from sharemarket a, (select b_seq, count(*) likes from likeslist group by b_seq) b where a.sm_seq = b.b_seq(+) order by length(sm_seq)desc, sm_seq desc)
+          where rownum>#{startRowPerPage} and rownum<=#{endRowPerPage}
+       ]]>
+	</select>
+	
+	<select id="selectTotalRowCounts" resultType="long">
+		select NVL(max(ROWNUM), 0) from ShareMarket
+	</select>
+	
+	<select id="selectShareMarketContents" parameterType="String" resultType="ShareMarket">
+		<!-- select * from ShareMarket where sm_seq=#{sm_seq}  !!!original!!! -->
+		<!-- select a.*, b.likes from ShareMarket a, (select max(rownum) likes, b_seq from likeslist group by b_seq having b_seq=#{sm_seq})b where a.sm_seq = b.b_seq -->
+		<!-- select a.*, b.likes from sharemarket a, (select nvl(max(rownum), 0) likes from likeslist where b_seq=#{sm_seq})b where a.sm_seq=#{sm_seq} -->
+		select a.*, b.likes from sharemarket a, (select count(*) likes from likeslist where b_seq=#{sm_seq})b where a.sm_seq=#{sm_seq}
+	</select>
+	
+	<insert id="insertShareMarketContents" parameterType="ShareMarket">
+		insert into ShareMarket(sm_seq, title, email, location, category, content) 
+		values('SM'||sharemarket_seq.nextval, #{title}, #{email}, #{location}, #{category}, #{content})
+	</insert>
+	
+	<update id="updateShareMarketContents" parameterType="ShareMarket">
+		update ShareMarket set category=#{category}, title=#{title}, content=#{content}, wdate=sysdate where sm_seq=#{sm_seq}
+	</update>
+	
+	<delete id="deleteShareMarketContents" parameterType="String">
+		delete ShareMarket where sm_seq=#{sm_seq}
+	</delete>
+	
+	<select id="selectPrevAndNext" parameterType="String" resultType="PrevAndNext">
+		<!-- select "prev_seq", "next_seq", "prevTitle", "nextTitle" 
+		from (select lag(SM_SEQ, 1, 0) over(order by ROWNUM) as "prev_seq", 
+		lead(SM_SEQ, 1, 0) over(order by ROWNUM) as "next_seq", 
+		lag(TITLE, 1, 0) over(order by ROWNUM) as "prevTitle", 
+		lead(TITLE, 1, 0) over(order by ROWNUM) as "nextTitle",
+		aa.* from (select * from ShareMarket order by length(SM_SEQ)desc, SM_SEQ desc) aa) where SM_SEQ=#{sm_seq} -->
+		select "prevSeq", "nextSeq", "prevFname", "nextFname"
+		from (select lag(SM_SEQ, 1, 0) over (order by ROWNUM) as "prevSeq", 
+		lead(SM_SEQ, 1, 0) over(order by ROWNUM) as "nextSeq",
+		lag(FNAME, 1, 0) over(order by ROWNUM) as "prevFname",
+		lead(FNAME, 1, 0) over(order by ROWNUM) as "nextFname",
+		aa.*
+		from (select a.*, b.fname, b.rnum from sharemarket a, 
+		(select * from (select row_number() over(partition by b_seq order by b_seq desc) rnum, b_seq, fname from files) where rnum=1) b
+		where a.sm_seq=b.b_seq(+) order by length(sm_seq)desc, sm_seq desc)aa) where sm_seq=#{sm_seq}
+	</select>
+	
+	<update id="updateShareMarketViews" parameterType="String">
+		update ShareMarket set views=views+1 where sm_seq=#{sm_seq}
+	</update>
+</mapper>

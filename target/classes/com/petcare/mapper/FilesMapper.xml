@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.petcare.mapper.FilesMapper">
+	<!-- LJY(Info) -->
+	<insert id="insert" parameterType="Files">
+  		insert into FILES values (files_seq.nextval, 'INFO'||(select LAST_NUMBER-1 from USER_SEQUENCES where SEQUENCE_NAME='NOTICE_SEQ'), #{fname}, #{ofname})
+  	</insert>
+  	<delete id="delete" parameterType="String">
+  		delete from FILES where B_SEQ=#{n_seq}
+  	</delete>
+  	<select id="filecontent" resultType="Files">
+  		select * from FILES where B_SEQ=#{n_seq}
+  	</select>
+  	<insert id="fileupdateinsert" parameterType="Files">
+  		insert into FILES values (files_seq.nextval, #{n_seq}, #{fname}, #{ofname})
+  	</insert>
+  	<delete id="fileupdatedelete" parameterType="String">
+  		delete from FILES where B_SEQ=#{n_seq} and ofname=#{ofname}
+  	</delete>
+  	<select id="fileupdatedeleteselect" resultType="Files">
+  		select * from FILES where B_SEQ=#{n_seq} and ofname=#{ofname}
+  	</select>
+  	  	 
+  	 <!-- (Common) -->	 
+ 	<insert id="insertFiles" parameterType="FilesVo">
+ 		insert into Files values(files_seq.nextval, 
+ 		<choose>
+ 			<when test="b_seq == null">
+ 				#{seqinit}||(select LAST_NUMBER from USER_SEQUENCES where sequence_name=#{seqname}),
+ 			</when>
+ 			<otherwise>
+ 				#{b_seq},
+ 			</otherwise>
+ 		</choose>
+ 		#{fname}, #{ofname})
+ 	</insert> 		
+ 	<select id="selectFiles" parameterType="String" resultType="Files">
+ 		select fname, ofname from Files where b_seq=#{b_seq} order by f_seq
+ 	</select> 	
+ 	<delete id="deleteFiles" parameterType="String">
+ 		delete Files where fname=#{fname}
+ 	</delete>
+ 	
+ </mapper> 
